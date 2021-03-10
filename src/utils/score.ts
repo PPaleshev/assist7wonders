@@ -1,4 +1,4 @@
-import { IPlayerScore, IGameScore } from '../types';
+import { PlayerScore, GameScore } from '../types';
 
 const SCIENCE_KEYS = ['compass', 'tablet', 'gear'];
 const WILDCARD_SCIENCE_KEY = 'wildcards';
@@ -10,7 +10,7 @@ const scienceMemo: {
   '0:0:0:0': 0,
 };
 
-export function getTotal(playerScore: IPlayerScore, gameScores: IGameScore[]): number {
+export function getTotal(playerScore: PlayerScore, gameScores: GameScore[]): number {
   const gameCounters = gameScores.map(score => score.counters).flat();
   const validPlayerScore = gameCounters.reduce((result, counter) => {
     return {
@@ -25,7 +25,7 @@ export function getTotal(playerScore: IPlayerScore, gameScores: IGameScore[]): n
   );
 }
 
-export function getFlatTotal(playerScore: IPlayerScore): number {
+export function getFlatTotal(playerScore: PlayerScore): number {
   return Object.keys(playerScore).reduce((sum, key) => {
     if (!SCIENCE_KEYS.includes(key) && key !== WILDCARD_SCIENCE_KEY && key !== TREASURY_KEY) {
       sum += playerScore[key] || 0;
@@ -73,7 +73,7 @@ function getWildcardPossibilities(scienceScores: number[], wildcards: number): n
   return scienceMemo[memoKey];
 }
 
-export function getScienceTotal(playerScore: IPlayerScore): number {
+export function getScienceTotal(playerScore: PlayerScore): number {
   const scienceScores = SCIENCE_KEYS.reduce((scienceScores, key) => {
     return [...scienceScores, playerScore[key] || 0];
   }, [] as number[]);
@@ -81,7 +81,7 @@ export function getScienceTotal(playerScore: IPlayerScore): number {
   return getWildcardPossibilities(scienceScores, wildcards);
 }
 
-export function getTreasuryTotal(playerScore: IPlayerScore): number {
+export function getTreasuryTotal(playerScore: PlayerScore): number {
   return playerScore.treasury ? Math.trunc(playerScore.treasury / 3) : 0;
 }
 
